@@ -4,6 +4,15 @@ class PostsController < ApplicationController
   # GET /posts or /posts.json
   def index
     @posts = Post.all
+
+      if params[:query].present?
+        query = "%#{params[:query]}%"
+        @posts = @posts.where("title ILIKE ? OR description ILIKE ?", query, query)
+      end 
+      respond_to do |format|
+        format.html 
+        format.turbo_stream { render partial: "posts/post_list", locals: { posts: @posts } }
+      end
   end
 
   # GET /posts/1 or /posts/1.json

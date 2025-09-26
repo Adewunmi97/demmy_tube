@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   root "pages#home"
-  get "pages/pricing"
+  get "pricing", to: "pages#pricing"
   get "pages/privacy"
   resources :posts
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

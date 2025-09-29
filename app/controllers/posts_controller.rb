@@ -1,5 +1,7 @@
 class PostsController < ApplicationController
   before_action :set_post, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!, except: [:index, :show]
+  before_action :ensure_admin_user, only: [:new, :create, :edit, :update, :destroy]
 
   # GET /posts or /posts.json
   def index
@@ -11,8 +13,14 @@ class PostsController < ApplicationController
       end 
       respond_to do |format|
         format.html 
-        format.turbo_stream { render partial: "posts/post_list", locals: { posts: @posts } }
+        format.turbo_stream { render partial: "posts/posts_list", locals: { posts: @posts } }
       end
+  end
+
+  def ensure_admin_user
+    unless current_user&.email == Rails.application.credentials.dig(:admin, :email)
+      redirect_to root_path, alert: "You must be an admin to perform this action"
+    end
   end
 
   # GET /posts/1 or /posts/1.json

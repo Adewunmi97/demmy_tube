@@ -31,6 +31,11 @@ Devise.setup do |config|
 
   # Configure the parent class responsible to send e-mails.
   # config.parent_mailer = 'ActionMailer::Base'
+  config.omniauth :google_oauth2, Rails.application.credentials.dig(:omniauth, :google_client_id),
+  Rails.application.credentials.dig(:omniauth, :google_client_secret), {}
+
+  config.omniauth :github, Rails.application.credentials.dig(:omniauth, :github_client_id),
+  Rails.application.credentials.dig(:omniauth, :github_client_secret), scope: 'user,public_repo'
 
   # ==> ORM configuration
   # Load and configure the ORM. Supports :active_record (default) and

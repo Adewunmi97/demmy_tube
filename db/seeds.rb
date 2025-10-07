@@ -53,24 +53,31 @@ Post.create!(
   pro: true
 )
 
-# puts "Email: #{Rails.application.credentials.dig(:admin, :email).inspect}"
-# admin_email = Rails.application.credentials.dig(:admin, :email)
-# admin_password = Rails.application.credentials.dig(:admin, :email)
+Category.create!([
+  {name: "Ruby"},
+  {name: "Rails"},
+  {name: "JavaScript"},
+  {name: "PHP"}
+])
+
+puts "Email: #{Rails.application.credentials.dig(:admin, :email).inspect}"
+admin_email = Rails.application.credentials.dig(:admin, :email)
+admin_password = Rails.application.credentials.dig(:admin, :password)
 
 
-# if admin_email.present? && admin_password.present?
-#   unless User.exists?(email: admin_email)
-#     User.create!(
-#       email: admin_email,
-#       password: admin_password,
-#       password_confirmation: admin_password,
-#     )
-#     puts "Admin user created"
-#   else
-#     puts "Admin user already exists"
-#   end
-# else
-#   puts "Admin credentials not found in credentials file"
-# end
+if admin_email.present? && admin_password.present?
+  unless User.exists?(email: admin_email)
+    User.create!(
+      email: admin_email,
+      password: admin_password,
+      password_confirmation: admin_password,
+    )
+    puts "Admin user created"
+  else
+    puts "Admin user already exists"
+  end
+else
+  puts "Admin credentials not found in credentials file"
+end
 
-# puts " Done seeding!"
+puts " Done seeding!"

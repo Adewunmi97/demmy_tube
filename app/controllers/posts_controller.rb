@@ -6,17 +6,24 @@ class PostsController < ApplicationController
   # GET /posts or /posts.json
   def index
     @posts = Post.all
-
-      if params[:query].present?
-        query = "%#{params[:query]}%"
-        @posts = @posts.where("title ILIKE ? OR description ILIKE ?", query, query)
-      end 
-      respond_to do |format|
-        format.html 
-        format.turbo_stream { render partial: "posts/posts_list", locals: { posts: @posts } }
-      end
+  
+    if params[:query].present?
+      query = "%#{params[:query]}%"
+      @posts = @posts.where("title ILIKE ? OR description ILIKE ?", query, query)
+    end
+  
+    if params[:category_id].present?
+      @posts = @posts.joins(:categories).where(categories: { id: params[:category_id] }).distinct
+    end
+  
+    @categories = Category.all
+  
+    respond_to do |format|
+      format.html
+      format.turbo_stream { render partial: "posts/posts_list", locals: { posts: @posts } }
+    end
   end
-
+  
   def ensure_admin_user
     unless current_user&.email == Rails.application.credentials.dig(:admin, :email)
       redirect_to root_path, alert: "You must be an admin to perform this action"
@@ -82,6 +89,6 @@ class PostsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def post_params
-      params.expect(post: [ :title, :description, :thumbnail_url, :video_url, :pro ])
+      params.expect(post: [ :title, :description, :thumbnail_url, :video_url, :pro, category_ids: [] ])
     end
 end

@@ -34,7 +34,7 @@ Post.create!(
   video_url: "https://www.youtube.com/embed/XNDOqznkZ4Y?si=6WuJwk8qqBdM4EUK",
   created_at: Faker::Time.backward(days: 7),
   updated_at: Time.now,
-  pro: true
+  pro: false
 )
 
 Post.create!(
@@ -50,7 +50,7 @@ Post.create!(
   video_url: "https://www.youtube.com/embed/XNDOqznkZ4Y?si=6WuJwk8qqBdM4EUK",
   created_at: Faker::Time.backward(days: 7),
   updated_at: Time.now,
-  pro: true
+  pro: false
 )
 
 Category.create!([

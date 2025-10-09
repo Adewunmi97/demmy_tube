@@ -1,2 +1,167 @@
-<h1>Pages#pricing</h1>
-<p>Find me in app/views/pages/pricing.html.erb</p>
+<div class="max-w-4xl mx-auto px-6">
+  <h1 class="text-4xl font-bold text-center mb-6">Pricing</h1>
+  <p class="text-center text-gray-600 mb-8">
+    💎 Become a Pro member and unlock exclusive videos and Source Code access
+  </p>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <!-- Monthly Plan -->
+    <div class="border border-blue-600 bg-blue-50 rounded-2xl shadow-md p-8 transition hover:shadow-xl">
+      <h2 class="text-2xl font-semibold mb-4">Monthly Plan</h2>
+
+      <div class="text-4xl font-bold mb-2">€15</div>
+
+      <ul class="space-y-2 text-sm text-gray-700 mb-8">
+      </ul>
+
+      <% if current_user %>
+      <div class="relative z-0">
+        <div id="paypal-monthly-button" class="inline-block text-white px-6 py-3 rounded-xl text-sm font-medium transition"></div>
+      </div>
+<% else %>
+  <%= render partial: "users/start_button" %>
+<% end %>
+
+    </div>
+
+    <!-- Yearly Plan -->
+    <div class="border rounded-2xl shadow-md p-8 transition hover:shadow-xl">
+      <h2 class="text-2xl font-semibold mb-4">Yearly Plan</h2>
+
+      <div class="text-4xl font-bold mb-2">€150</div>
+
+      <ul class="space-y-2 text-sm text-gray-700 mb-8">
+      </ul>
+
+      <% if current_user %>
+      <div class="relative z-0">
+        <div id="paypal-yearly-button" class="inline-block text-white px-6 py-3 rounded-xl text-sm font-medium transition"></div>
+      </div>
+<% else %>
+  <%= render partial: "users/start_button" %>
+<% end %>
+
+    </div>
+  </div>
+
+  <p class="text-xs text-gray-400 text-center mt-12">
+    💡 Cancel anytime. Secured by
+    <a href="https://www.paypal.com/ng/home" class="underline text-blue-600">Paypal.</a>
+  </p>
+
+<ul class="space-y-4 text-sm text-gray-700">
+  <li class="flex items-start">
+    <span class="text-green-600 mr-2">✅</span>
+    <div>
+      <strong>Access Pro episodes</strong><br>
+      Full access to Pro videos and private source code.
+    </div>
+  </li>
+
+  <li class="flex items-start">
+    <span class="text-green-600 mr-2">✅</span>
+    <div>
+      <strong>Access source code</strong><br>
+      Get access to the source code of all episodes. No need to buy individually on Gumroad
+    </div>
+  </li>
+
+  <li class="flex items-start">
+    <span class="text-green-600 mr-2">✅</span>
+    <div>
+      <strong>Early access</strong><br>
+      Access free episodes before they are released to the public.
+    </div>
+  </li>
+
+  <li class="flex items-start">
+    <span class="text-green-600 mr-2">✅</span>
+    <div>
+      <strong>Ad free</strong><br>
+      No banners, tracking or whatever bs.
+    </div>
+  </li>
+</ul>
+
+</div>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    if (document.getElementById("paypal-monthly-button")) {
+      paypal.Buttons({
+        createOrder: function(data, actions) {
+          return actions.order.create({
+            purchase_units: [{
+              amount: {
+                value: "15.00" // monthly plan price
+              },
+              description: "Monthly Pro Membership"
+            }]
+          });
+        },
+        onApprove: function(data, actions) {
+          return actions.order.capture().then(function(details) {
+            // Send confirmation to your Rails backend
+            fetch("/pages/payment_success", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content
+              },
+              body: JSON.stringify({
+                plan: "monthly",
+                order_id: data.orderID,
+                payer: details.payer
+              })
+            }).then(() => {
+              alert("Payment successful! Welcome to Pro membership 🎉");
+              window.location.href = "/"; // redirect after payment
+            });
+          });
+        }
+      }).render("#paypal-monthly-button");
+    }
+  });
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    if (document.getElementById("paypal-yearly-button")) {
+      paypal.Buttons({
+        createOrder: function(data, actions) {
+          return actions.order.create({
+            purchase_units: [{
+              amount: {
+                value: "150.00" // yearly plan price
+              },
+              description: "Monthly Pro Membership"
+            }]
+          });
+        },
+        onApprove: function(data, actions) {
+          return actions.order.capture().then(function(details) {
+            // Send confirmation to your Rails backend
+            fetch("/pages/payment_success", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content
+              },
+              body: JSON.stringify({
+                plan: "monthly",
+                order_id: data.orderID,
+                payer: details.payer
+              })
+            }).then(() => {
+              alert("Payment successful! Welcome to Pro membership 🎉");
+              window.location.href = "/"; // redirect after payment
+            });
+          });
+        }
+      }).render("#paypal-yearly-button");
+    }
+  });
+</script>
+
+

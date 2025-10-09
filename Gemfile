@@ -71,3 +71,5 @@ gem 'omniauth-google-oauth2'
 gem 'omniauth-github'
 gem 'omniauth'
 gem 'omniauth-rails_csrf_protection' # Recommended for CSRF protection
+gem 'paypal-checkout-sdk'
+
